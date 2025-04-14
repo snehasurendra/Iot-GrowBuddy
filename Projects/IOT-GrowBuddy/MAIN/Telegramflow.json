@@ -1,0 +1,433 @@
+[
+    {
+        "id": "5ebe3da54687fc81",
+        "type": "tab",
+        "label": "TELEGRAM flow",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "2",
+        "type": "switch",
+        "z": "5ebe3da54687fc81",
+        "name": "Command Switch",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "/start",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 600,
+        "y": 320,
+        "wires": [
+            [
+                "3"
+            ]
+        ]
+    },
+    {
+        "id": "3",
+        "type": "function",
+        "z": "5ebe3da54687fc81",
+        "name": "Start Command",
+        "func": "msg.payload = {\n    chatId: msg.payload.chatId,\n    type: \"message\",\n    content: \"Hi Sneha! Select an option:\\n1. Check Temperature\\n2. Check Humidity\\n3. Check Soil Moisture\\n4. Switch On Pump\\n5. Stop\",\n    options: {\n        reply_markup: JSON.stringify({\n            keyboard: [\n                [{ text: \"1. Check Temperature\" }],\n                [{ text: \"2. Check Humidity\" }],\n                [{ text: \"3. Check Soil Moisture\" }],\n                [{ text: \"4. Switch On Pump\" }],\n                [{ text: \"5. Stop\" }]\n            ],\n            one_time_keyboard: true,\n            resize_keyboard: true\n        })\n    }\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 790,
+        "y": 320,
+        "wires": [
+            [
+                "4"
+            ]
+        ]
+    },
+    {
+        "id": "4",
+        "type": "telegram sender",
+        "z": "5ebe3da54687fc81",
+        "name": "",
+        "bot": "c5559b966808a5d9",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1170,
+        "y": 380,
+        "wires": [
+            [
+                "f28a728af3fdfa7f"
+            ]
+        ]
+    },
+    {
+        "id": "6",
+        "type": "switch",
+        "z": "5ebe3da54687fc81",
+        "name": "Callback Switch",
+        "property": "payload.content",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "2",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "3",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "4",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "5",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 5,
+        "x": 500,
+        "y": 520,
+        "wires": [
+            [
+                "279636535f378548"
+            ],
+            [
+                "7"
+            ],
+            [
+                "8"
+            ],
+            [
+                "9"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "7",
+        "type": "function",
+        "z": "5ebe3da54687fc81",
+        "name": "Humidity",
+        "func": "var humidity = msg.payload;  // Store temperature separately\n\nmsg.payload = {\n    chatId: 1467891015,\n    type: 'message',\n    content: \"The current humidity is \" + humidity + \"%\"\n};\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 810,
+        "y": 460,
+        "wires": [
+            [
+                "4"
+            ]
+        ]
+    },
+    {
+        "id": "8",
+        "type": "function",
+        "z": "5ebe3da54687fc81",
+        "name": "Soil Moisture",
+        "func": "const sensorType = msg.topic.split(\"/\").pop(); // Extract sensor type from the topic\n\n// Example equations (modify based on your understanding of the relationship):\nconst tempCoefficient = 0.1; // Adjust this coefficient based on your observations.\nconst humidityCoefficient = 0.2; // Adjust this coefficient based on your observations\nconst constantTerm = 10; // Adjust this constant term based on your observations\n\n// Declare humidity variable\nlet humidity = 0;\nlet temperature = 0; // Declare a temperature variable\nvar estimatedSoilMoisture=0;\n\n\n// Handle temperature and humidity separately based on the sensor type\nif (sensorType === \"temp\") {\n    const rawTemperature = msg.payload;\n    global.set(\"rawTemperature\", msg.payload);\n    temperature = parseFloat(rawTemperature);\n\n    // Debug messages\n    node.warn(\"Parsed Temperature: \" + temperature);\n\n    if (rawTemperature === null || isNaN(temperature)) {\n        // Check if temperature is null or not a valid number and log a warning\n        if (rawTemperature == null) {\n            node.warn(\"Temperature is null.\");\n        } else {\n            node.warn(\"Temperature is not a valid number.\");\n        }\n\n        // Handle the case when temperature is null or not a valid number\n        msg.payload = {\n            \"content\": \"Problem with temperature data. Cannot calculate estimated soil moisture.\"\n        };\n    } else {\n        // If temperature is valid, store it globally\n        global.set(\"temperature\", temperature);\n    }\n} else if (sensorType === \"humi\") {\n    const rawHumidity = msg.payload;\n    global.set(\"rawHumidity\", msg.payload);\n    humidity = parseFloat(rawHumidity); // Declare the humidity variable\n\n    // Debug messages\n    node.warn(\"Parsed Humidity: \" + humidity);\n\n    if (rawHumidity === null || isNaN(humidity)) {\n        // Check if humidity is null or not a valid number and log a warning\n        if (rawHumidity === null) {\n            node.warn(\"Humidity is null.\");\n        } else {\n            node.warn(\"Humidity is not a valid number.\");\n        }\n\n        // Handle the case when humidity is null or not a valid number\n        msg.payload = {\n            \"content\": \"Problem with humidity data. Cannot calculate estimated soil moisture.\"\n        };\n    } else {\n        // If humidity is valid, store it globally\n        global.set(\"humidity\", humidity);\n    }\n}\n\n// Now, calculate soil moisture only when both temperature and humidity values are available\nif (global.get(\"temperature\") !== undefined && global.get(\"humidity\") !== undefined) {\n    const temp = global.get(\"temperature\");\n    const hum = global.get(\"humidity\");\n\n    // Calculate estimated soil moisture using both temperature and humidity\n    var estimatedSoilMoisture = (tempCoefficient * temp) + (humidityCoefficient * hum) + constantTerm;\n\n    // Debug messages\n    node.warn(\"Estimated Soil Moisture: \" + estimatedSoilMoisture);\n\n    // Create a new message object with the estimated soil moisture, temperature, and humidity\n    msg.payload = {\n        temperature: temp,\n        humidity: hum,\n        estimatedSoilMoisture: estimatedSoilMoisture.toFixed(2) // Rounded to 2 decimal places\n    };\n    global.set(\"estimatedSoilMoisture\", estimatedSoilMoisture);\n}\n\n\n\nmsg.payload = {\n    chatId: 1467891015,\n    type: 'message',\n    content: \"The current Soil Moisture is \" + estimatedSoilMoisture + \"%\"\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 520,
+        "wires": [
+            [
+                "4"
+            ]
+        ]
+    },
+    {
+        "id": "9",
+        "type": "function",
+        "z": "5ebe3da54687fc81",
+        "name": "Switch On Pump",
+        "func": "msg.payload = {\n    chatId: msg.payload.chatId,\n    type: \"message\",\n    content: \"The pump has been switched on for 5 minutes.\"\n};\n\n// Add logic to trigger hardware control for the pump here\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 580,
+        "wires": [
+            [
+                "4"
+            ]
+        ]
+    },
+    {
+        "id": "1",
+        "type": "telegram receiver",
+        "z": "5ebe3da54687fc81",
+        "name": "",
+        "bot": "c5559b966808a5d9",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 310,
+        "y": 280,
+        "wires": [
+            [
+                "2",
+                "fa59073f774ba4be"
+            ]
+        ]
+    },
+    {
+        "id": "6e339b4af9523f79",
+        "type": "telegram receiver",
+        "z": "5ebe3da54687fc81",
+        "name": "",
+        "bot": "c5559b966808a5d9",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 290,
+        "y": 540,
+        "wires": [
+            [
+                "6"
+            ],
+            [
+                "49ae27505b9d634d"
+            ]
+        ]
+    },
+    {
+        "id": "49ae27505b9d634d",
+        "type": "debug",
+        "z": "5ebe3da54687fc81",
+        "name": "debug 28",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "f28a728af3fdfa7f",
+        "type": "debug",
+        "z": "5ebe3da54687fc81",
+        "name": "debug 29",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1110,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "fa59073f774ba4be",
+        "type": "debug",
+        "z": "5ebe3da54687fc81",
+        "name": "debug 30",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 490,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "279636535f378548",
+        "type": "function",
+        "z": "5ebe3da54687fc81",
+        "name": "Temperature ",
+        "func": "var currentRange;\nvar temperature = msg.payload;  // Store temperature separately\n\nmsg.payload = {\n    chatId: 1467891015,\n    type: 'message',\n    content: \"The current temperature is \" + temperature + \"°C\"\n};\n\nif (temperature > 25) {\n    currentRange = \"above 25\";\n} else if (temperature >= 10 && temperature <= 25) {\n    currentRange = \"10 to 25\";\n} else if (temperature < 10) {\n    currentRange = \"below 10\";\n} else {\n    currentRange = \"other\";\n}\n\nif (currentRange === \"above 25\") {\n    msg.payload = {\n        chatId: 1467891015,\n        type: 'message',\n        content: \"The temperature is beyond recommended for your plants: \" + temperature + \"°C. The ideal temperature is between 10°C to 25°C\"\n    };\n    return msg;\n} else if (currentRange === \"10 to 25\") {\n    msg.payload = {\n        chatId: 1467891015,\n        type: 'message',\n        content: \"The temperature is in a suitable condition: \" + temperature + \"°C\"\n    };\n    return msg;\n} else if (currentRange === \"below 10\") {\n    msg.payload = {\n        chatId: 1467891015,\n        type: 'message',\n        content: \"The temperature is very low for your plants: \" + temperature + \"°C. The ideal temperature is between 10°C to 25°C\"\n    };\n    return msg;\n}\n// If no suitable range, return null\nreturn null;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 830,
+        "y": 400,
+        "wires": [
+            [
+                "4"
+            ]
+        ]
+    },
+    {
+        "id": "020fc140d7097b60",
+        "type": "link in",
+        "z": "5ebe3da54687fc81",
+        "name": "link in 5",
+        "links": [
+            "0eedbda462c9b6db"
+        ],
+        "x": 565,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "799aaf5411485bb5",
+        "type": "link in",
+        "z": "5ebe3da54687fc81",
+        "name": "link in 6",
+        "links": [
+            "1a610a0595e0c9dc"
+        ],
+        "x": 565,
+        "y": 420,
+        "wires": [
+            [
+                "7"
+            ]
+        ]
+    },
+    {
+        "id": "cdda6cf22257dec1",
+        "type": "link in",
+        "z": "5ebe3da54687fc81",
+        "name": "link in 7",
+        "links": [
+            "0eedbda462c9b6db"
+        ],
+        "x": 565,
+        "y": 360,
+        "wires": [
+            [
+                "279636535f378548"
+            ]
+        ]
+    },
+    {
+        "id": "fc937252a4827835",
+        "type": "string",
+        "z": "5ebe3da54687fc81",
+        "name": "",
+        "prop": "payload",
+        "propout": "payload",
+        "object": "msg",
+        "objectout": "msg",
+        "x": 510,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e310a1f9b5632382",
+        "type": "ui_text",
+        "z": "5ebe3da54687fc81",
+        "group": "80228d1c6f13c156",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Soil Moisture Display",
+        "label": "Soil Moisture:",
+        "format": "{{msg.payload.estimatedSoilMoisture}}%",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1080,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "58512a25428d4791",
+        "type": "influxdb in",
+        "z": "5ebe3da54687fc81",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 660,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c5559b966808a5d9",
+        "type": "telegram bot",
+        "botname": "Sneha_proitd_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "addressfamily": "",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "80228d1c6f13c156",
+        "type": "ui_group",
+        "name": "2.Dashboard",
+        "tab": "5ab87c3aa890cb45",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5ab87c3aa890cb45",
+        "type": "ui_tab",
+        "name": "Tab",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

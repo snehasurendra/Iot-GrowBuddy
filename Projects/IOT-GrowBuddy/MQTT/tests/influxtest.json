@@ -1,0 +1,172 @@
+[
+    {
+        "id": "0ecc08dbe826c573",
+        "type": "tab",
+        "label": "influx-test",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c1ee09302b08f89c",
+        "type": "inject",
+        "z": "0ecc08dbe826c573",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "9",
+        "payloadType": "num",
+        "x": 290,
+        "y": 100,
+        "wires": [
+            [
+                "41ef80cfb82c4e54",
+                "39524dcaaf67c5a2"
+            ]
+        ]
+    },
+    {
+        "id": "41ef80cfb82c4e54",
+        "type": "influxdb out",
+        "z": "0ecc08dbe826c573",
+        "influxdb": "f68094030acce045",
+        "name": "",
+        "measurement": "testSneha",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "HTW Berlin",
+        "bucket": "first-bucket",
+        "x": 630,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "08f1845937d0ab62",
+        "type": "inject",
+        "z": "0ecc08dbe826c573",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "5",
+        "payloadType": "num",
+        "x": 290,
+        "y": 180,
+        "wires": [
+            [
+                "41ef80cfb82c4e54",
+                "39524dcaaf67c5a2"
+            ]
+        ]
+    },
+    {
+        "id": "39524dcaaf67c5a2",
+        "type": "debug",
+        "z": "0ecc08dbe826c573",
+        "name": "debug 23",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 600,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "3a43f4ab42d8fb96",
+        "type": "inject",
+        "z": "0ecc08dbe826c573",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Hello",
+        "payloadType": "str",
+        "x": 310,
+        "y": 360,
+        "wires": [
+            [
+                "2641f7917af325c5",
+                "3b583d72de4c262a"
+            ]
+        ]
+    },
+    {
+        "id": "2641f7917af325c5",
+        "type": "debug",
+        "z": "0ecc08dbe826c573",
+        "name": "debug 22",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "3b583d72de4c262a",
+        "type": "influxdb out",
+        "z": "0ecc08dbe826c573",
+        "influxdb": "f68094030acce045",
+        "name": "",
+        "measurement": "",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "organisation",
+        "bucket": "first-bucket",
+        "x": 690,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "f68094030acce045",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://141.45.154.198:8086/",
+        "timeout": "30",
+        "rejectUnauthorized": false
+    }
+]

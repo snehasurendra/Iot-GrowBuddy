@@ -1,0 +1,637 @@
+[
+    {
+        "id": "eafc314a10911acb",
+        "type": "tab",
+        "label": "Main flow ",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "fdfdb9378faa05d1",
+        "type": "mqtt in",
+        "z": "eafc314a10911acb",
+        "name": "",
+        "topic": "HTW_IoTM2425/Sneha/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "7802cdc7dce973d6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 260,
+        "y": 240,
+        "wires": [
+            [
+                "3e6006122cf004ac",
+                "d0f0f3d952dc9ebe",
+                "385f83a8a9ad2a4d"
+            ]
+        ]
+    },
+    {
+        "id": "3e6006122cf004ac",
+        "type": "ui_chart",
+        "z": "eafc314a10911acb",
+        "name": "",
+        "group": "75e37fa18cc07d80",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Temp Chart",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 590,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "179e1bca2864f933",
+        "type": "ui_chart",
+        "z": "eafc314a10911acb",
+        "name": "",
+        "group": "75e37fa18cc07d80",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Humidity Chart",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 580,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "fab82628ae70f62a",
+        "type": "mqtt in",
+        "z": "eafc314a10911acb",
+        "name": "",
+        "topic": "HTW_IoTM2425/Sneha/humi",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "7802cdc7dce973d6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 640,
+        "wires": [
+            [
+                "179e1bca2864f933",
+                "a389528e984ea846"
+            ]
+        ]
+    },
+    {
+        "id": "d0f0f3d952dc9ebe",
+        "type": "influxdb out",
+        "z": "eafc314a10911acb",
+        "influxdb": "f68094030acce045",
+        "name": "Temp_influx",
+        "measurement": "tempval",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "HTW Berlin",
+        "bucket": "first-bucket",
+        "x": 610,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "385f83a8a9ad2a4d",
+        "type": "function",
+        "z": "eafc314a10911acb",
+        "name": "tempAlarm",
+        "func": "var currentRange; \n \nif (msg.payload > 15) { \n    currentRange = \"above 15\"; \n} \nelse if (msg.payload >= 10 && msg.payload <= 15) { \n    currentRange = \"10 to 15\"; \n} \nelse if (msg.payload < 5) { \n    currentRange = \"below 5\"; \n} \nelse { \n    currentRange = \"other\"; \n} \n \n// Check if the current range is different from the previous one \nif (currentRange !== flow.get('previousRange')) { \n    // Update the previous range \n    flow.set('previousRange', currentRange); \n \n    // Trigger the message only if the range changes \n    if (currentRange === \"above 15\") { \n        msg.payload = { \n            chatId: 1467891015, \n            type: 'message', \n            content: \"The temperature is beyond recommended for your plants \" + \nmsg.payload \n        }; \n        return msg; \n    } \n     else if (currentRange === \"10 to 15\") { \n        msg.payload = { \n            chatId: 1467891015, \n            type: 'message', \n            content: \"The temperature is in a suitable condition\" + msg.payload \n        }; return msg;} \n    else if (currentRange === \"below 5\") { \n        msg.payload = { \n            chatId: 1467891015,\n             type: 'message', \n            content: \"The temperature is very low \" + msg.payload \n        }; \n        return msg; \n    }// Add more conditions if needed for other ranges \n}// If there's no change in the range, return null \nreturn null;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 670,
+        "y": 300,
+        "wires": [
+            [
+                "51e3d663134a0105",
+                "63b5799b25923d82"
+            ]
+        ]
+    },
+    {
+        "id": "51e3d663134a0105",
+        "type": "telegram sender",
+        "z": "eafc314a10911acb",
+        "name": "",
+        "bot": "c5559b966808a5d9",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 910,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "63b5799b25923d82",
+        "type": "debug",
+        "z": "eafc314a10911acb",
+        "name": "debug 26",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "42bf6b238b11d3ed",
+        "type": "mqtt in",
+        "z": "eafc314a10911acb",
+        "name": "",
+        "topic": "HTW_IoTM2425/Sneha/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "7802cdc7dce973d6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 560,
+        "wires": [
+            [
+                "0949c9e903964b3d",
+                "a389528e984ea846"
+            ]
+        ]
+    },
+    {
+        "id": "0949c9e903964b3d",
+        "type": "debug",
+        "z": "eafc314a10911acb",
+        "name": "debug 27",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "9f589685c26b5c90",
+        "type": "ui_text",
+        "z": "eafc314a10911acb",
+        "group": "80228d1c6f13c156",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Soil Moisture Display",
+        "label": "Soil Moisture:",
+        "format": "{{msg.payload.estimatedSoilMoisture}}%",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 840,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "dcb7bab1a70610ac",
+        "type": "switch",
+        "z": "eafc314a10911acb",
+        "name": "Check soil moisture",
+        "property": "payload.estimatedSoilMoisture",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lte",
+                "v": "30",
+                "vt": "num"
+            },
+            {
+                "t": "gt",
+                "v": "30",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 430,
+        "y": 900,
+        "wires": [
+            [
+                "3c681d3b036b0e48"
+            ],
+            [
+                "796ce7db60b5239e"
+            ]
+        ]
+    },
+    {
+        "id": "3c681d3b036b0e48",
+        "type": "change",
+        "z": "eafc314a10911acb",
+        "name": "Pump ON",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "pump",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "ON",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 660,
+        "y": 880,
+        "wires": [
+            [
+                "9c057138c69a1a80",
+                "70912e1a5e10ada0"
+            ]
+        ]
+    },
+    {
+        "id": "796ce7db60b5239e",
+        "type": "change",
+        "z": "eafc314a10911acb",
+        "name": "Pump OFF",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "OFF",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 650,
+        "y": 960,
+        "wires": [
+            [
+                "9c057138c69a1a80"
+            ]
+        ]
+    },
+    {
+        "id": "9c057138c69a1a80",
+        "type": "ui_text",
+        "z": "eafc314a10911acb",
+        "group": "75e37fa18cc07d80",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Pump Status Display",
+        "label": "Pump Status:",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 860,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "70912e1a5e10ada0",
+        "type": "trigger",
+        "z": "eafc314a10911acb",
+        "name": "Turn OFF after 2 minutes",
+        "op1": "ON",
+        "op2": "OFF",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "2",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "min",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "",
+        "outputs": 2,
+        "x": 870,
+        "y": 800,
+        "wires": [
+            [
+                "f0623aefa104fc96"
+            ],
+            [
+                "22c8e734d0a7d060"
+            ]
+        ]
+    },
+    {
+        "id": "f0623aefa104fc96",
+        "type": "ui_text",
+        "z": "eafc314a10911acb",
+        "group": "75e37fa18cc07d80",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Pump Status UI",
+        "label": "Pump Status:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1140,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "22c8e734d0a7d060",
+        "type": "ui_text",
+        "z": "eafc314a10911acb",
+        "group": "75e37fa18cc07d80",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Pump Status UI",
+        "label": "Pump Status:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1140,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "a389528e984ea846",
+        "type": "function",
+        "z": "eafc314a10911acb",
+        "name": "SoilMoisture",
+        "func": "const sensorType = msg.topic.split(\"/\").pop(); // Extract sensor type from the topic\n\n// Example equations (modify based on your understanding of the relationship):\nconst tempCoefficient = 0.1; // Adjust this coefficient based on your observations.\nconst humidityCoefficient = 0.2; // Adjust this coefficient based on your observations\nconst constantTerm = 10; // Adjust this constant term based on your observations\n\n// Declare humidity variable\nlet humidity = 0;\nlet temperature = 0; // Declare a temperature variable\n\n// Handle temperature and humidity separately based on the sensor type\nif (sensorType === \"temp\") {\n    const rawTemperature = msg.payload;\n    global.set(\"rawTemperature\", msg.payload);\n    temperature = parseFloat(rawTemperature);\n\n    // Debug messages\n    node.warn(\"Parsed Temperature: \" + temperature);\n\n    if (rawTemperature === null || isNaN(temperature)) {\n        // Check if temperature is null or not a valid number and log a warning\n        if (rawTemperature == null) {\n            node.warn(\"Temperature is null.\");\n        } else {\n            node.warn(\"Temperature is not a valid number.\");\n        }\n\n        // Handle the case when temperature is null or not a valid number\n        msg.payload = {\n            \"content\": \"Problem with temperature data. Cannot calculate estimated soil moisture.\"\n        };\n    } else {\n        // If temperature is valid, store it globally\n        global.set(\"temperature\", temperature);\n    }\n} else if (sensorType === \"humi\") {\n    const rawHumidity = msg.payload;\n    global.set(\"rawHumidity\", msg.payload);\n    humidity = parseFloat(rawHumidity); // Declare the humidity variable\n\n    // Debug messages\n    node.warn(\"Parsed Humidity: \" + humidity);\n\n    if (rawHumidity === null || isNaN(humidity)) {\n        // Check if humidity is null or not a valid number and log a warning\n        if (rawHumidity === null) {\n            node.warn(\"Humidity is null.\");\n        } else {\n            node.warn(\"Humidity is not a valid number.\");\n        }\n\n        // Handle the case when humidity is null or not a valid number\n        msg.payload = {\n            \"content\": \"Problem with humidity data. Cannot calculate estimated soil moisture.\"\n        };\n    } else {\n        // If humidity is valid, store it globally\n        global.set(\"humidity\", humidity);\n    }\n}\n\n// Now, calculate soil moisture only when both temperature and humidity values are available\nif (global.get(\"temperature\") !== undefined && global.get(\"humidity\") !== undefined) {\n    const temp = global.get(\"temperature\");\n    const hum = global.get(\"humidity\");\n\n    // Calculate estimated soil moisture using both temperature and humidity\n    var estimatedSoilMoisture = (tempCoefficient * temp) + (humidityCoefficient * hum) + constantTerm;\n\n    // Debug messages\n    node.warn(\"Estimated Soil Moisture: \" + estimatedSoilMoisture);\n\n    // Create a new message object with the estimated soil moisture, temperature, and humidity\n    msg.payload = {\n        temperature: temp,\n        humidity: hum,\n        estimatedSoilMoisture: estimatedSoilMoisture.toFixed(2) // Rounded to 2 decimal places\n    };\n    global.set(\"estimatedSoilMoisture\", estimatedSoilMoisture);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 580,
+        "wires": [
+            [
+                "9f589685c26b5c90",
+                "ab137415887f8263",
+                "2cb0837fe92be099",
+                "3774f916ac969b0c"
+            ]
+        ]
+    },
+    {
+        "id": "ab137415887f8263",
+        "type": "ui_text",
+        "z": "eafc314a10911acb",
+        "group": "80228d1c6f13c156",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Humidity Display",
+        "label": "Currrent Humidity:",
+        "format": "{{msg.payload.hum}}%",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 830,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "2cb0837fe92be099",
+        "type": "ui_text",
+        "z": "eafc314a10911acb",
+        "group": "80228d1c6f13c156",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Temperature Display",
+        "label": "Current Temperature:",
+        "format": "{{msg.payload.temp}} °C",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 840,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "3774f916ac969b0c",
+        "type": "link out",
+        "z": "eafc314a10911acb",
+        "name": "SoilMoisture func",
+        "mode": "link",
+        "links": [
+            "899d468301d74058"
+        ],
+        "x": 765,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "7802cdc7dce973d6",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.f4.htw-berlin.de",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "10",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "75e37fa18cc07d80",
+        "type": "ui_group",
+        "name": "1. Dashgroup",
+        "tab": "5ab87c3aa890cb45",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "f68094030acce045",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://141.45.154.198:8086/",
+        "timeout": "30",
+        "rejectUnauthorized": false
+    },
+    {
+        "id": "c5559b966808a5d9",
+        "type": "telegram bot",
+        "botname": "Sneha_proitd_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "addressfamily": "",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "80228d1c6f13c156",
+        "type": "ui_group",
+        "name": "2.Dashboard",
+        "tab": "5ab87c3aa890cb45",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "5ab87c3aa890cb45",
+        "type": "ui_tab",
+        "name": "Tab",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

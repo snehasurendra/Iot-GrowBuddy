@@ -1,0 +1,311 @@
+[
+    {
+        "id": "4628c5b7adab8a31",
+        "type": "tab",
+        "label": "testing",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "fe49fe96f1104ad0",
+        "type": "inject",
+        "z": "4628c5b7adab8a31",
+        "name": "Hello",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Hello",
+        "payload": "iso",
+        "payloadType": "date",
+        "x": 190,
+        "y": 80,
+        "wires": [
+            [
+                "b10a71e3325b0fe5"
+            ]
+        ]
+    },
+    {
+        "id": "b10a71e3325b0fe5",
+        "type": "debug",
+        "z": "4628c5b7adab8a31",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "3e9d38bb1369fe03",
+        "type": "inject",
+        "z": "4628c5b7adab8a31",
+        "name": "5",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "one",
+        "payload": "5",
+        "payloadType": "num",
+        "x": 110,
+        "y": 320,
+        "wires": [
+            [
+                "f6a2d35142119377",
+                "e688b5446bb368f0",
+                "a3c39fceaef1bf25"
+            ]
+        ]
+    },
+    {
+        "id": "bf43b8d77d7681df",
+        "type": "inject",
+        "z": "4628c5b7adab8a31",
+        "name": "10",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "ten",
+        "payload": "10",
+        "payloadType": "num",
+        "x": 110,
+        "y": 380,
+        "wires": [
+            [
+                "f6a2d35142119377",
+                "e688b5446bb368f0",
+                "a3c39fceaef1bf25"
+            ]
+        ]
+    },
+    {
+        "id": "f6a2d35142119377",
+        "type": "debug",
+        "z": "4628c5b7adab8a31",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "e688b5446bb368f0",
+        "type": "ui_gauge",
+        "z": "4628c5b7adab8a31",
+        "name": "",
+        "group": "75e37fa18cc07d80",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "diff": false,
+        "className": "",
+        "x": 490,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "a3c39fceaef1bf25",
+        "type": "mqtt out",
+        "z": "4628c5b7adab8a31",
+        "name": "HTWIoTM2425/Sneha/temp",
+        "topic": "HTWIoTM2425/Sneha/temp",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "7802cdc7dce973d6",
+        "x": 560,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "9f3aaf2f7fc097a9",
+        "type": "mqtt in",
+        "z": "4628c5b7adab8a31",
+        "name": "HTWIoTM2425/Sneha/test",
+        "topic": "HTWIoTM2425/Sneha/test",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "7802cdc7dce973d6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 150,
+        "y": 760,
+        "wires": [
+            [
+                "9f57cd2b4c68171b"
+            ]
+        ]
+    },
+    {
+        "id": "9f57cd2b4c68171b",
+        "type": "debug",
+        "z": "4628c5b7adab8a31",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 520,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "7a3b438664a8c07d",
+        "type": "ui_slider",
+        "z": "4628c5b7adab8a31",
+        "name": "",
+        "label": "slider",
+        "tooltip": "",
+        "group": "75e37fa18cc07d80",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "className": "",
+        "x": 110,
+        "y": 620,
+        "wires": [
+            [
+                "e688b5446bb368f0",
+                "8541bce033a64c52"
+            ]
+        ]
+    },
+    {
+        "id": "8541bce033a64c52",
+        "type": "mqtt out",
+        "z": "4628c5b7adab8a31",
+        "name": "HTWIoTM2425/Sneha/test",
+        "topic": "HTWIoTM2425/Sneha/test",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "7802cdc7dce973d6",
+        "x": 580,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "75e37fa18cc07d80",
+        "type": "ui_group",
+        "name": "1. Dashgroup",
+        "tab": "5ab87c3aa890cb45",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "7802cdc7dce973d6",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.f4.htw-berlin.de",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "10",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "5ab87c3aa890cb45",
+        "type": "ui_tab",
+        "name": "Tab",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

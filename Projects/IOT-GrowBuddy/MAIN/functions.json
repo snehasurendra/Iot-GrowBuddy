@@ -1,0 +1,451 @@
+[
+    {
+        "id": "b1db984d36d03a5a",
+        "type": "tab",
+        "label": "FUNCTIONS",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "8d9e8d4067054573",
+        "type": "link in",
+        "z": "b1db984d36d03a5a",
+        "name": "link in 2",
+        "links": [
+            "0eedbda462c9b6db"
+        ],
+        "x": 315,
+        "y": 120,
+        "wires": [
+            [
+                "e6ee4902bee6736b",
+                "14d07bab58625756",
+                "f08b127df1e7473f"
+            ]
+        ]
+    },
+    {
+        "id": "c1a61ce5e540e2f9",
+        "type": "link in",
+        "z": "b1db984d36d03a5a",
+        "name": "link in 3",
+        "links": [
+            "1a610a0595e0c9dc"
+        ],
+        "x": 315,
+        "y": 200,
+        "wires": [
+            [
+                "14d07bab58625756"
+            ]
+        ]
+    },
+    {
+        "id": "e6ee4902bee6736b",
+        "type": "function",
+        "z": "b1db984d36d03a5a",
+        "name": "tempAlarm",
+        "func": "var currentRange;\nvar temperature = msg.payload;  // Store temperature separately\n\nmsg.payload = {\n    chatId: 1467891015,\n    type: 'message',\n    content: \"The current temperature is \" + temperature + \"°C\"\n};\n\nif (temperature > 15) {\n    currentRange = \"above 15\";\n} else if (temperature >= 10 && temperature <= 15) {\n    currentRange = \"10 to 15\";\n} else if (temperature < 5) {\n    currentRange = \"below 5\";\n} else {\n    currentRange = \"other\";\n}\n\nif (currentRange === \"above 15\") {\n    msg.payload = {\n        chatId: 1467891015,\n        type: 'message',\n        content: \"The temperature is beyond recommended for your plants: \" + temperature + \"°C\"\n    };\n    return msg;\n} else if (currentRange === \"10 to 15\") {\n    msg.payload = {\n        chatId: 1467891015,\n        type: 'message',\n        content: \"The temperature is in a suitable condition: \" + temperature + \"°C\"\n    };\n    return msg;\n} else if (currentRange === \"below 5\") {\n    msg.payload = {\n        chatId: 1467891015,\n        type: 'message',\n        content: \"The temperature is very low: \" + temperature + \"°C\"\n    };\n    return msg;\n}\n// If no suitable range, return null\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 510,
+        "y": 100,
+        "wires": [
+            [
+                "af9203538a129239"
+            ]
+        ]
+    },
+    {
+        "id": "f08b127df1e7473f",
+        "type": "debug",
+        "z": "b1db984d36d03a5a",
+        "name": "debug 32",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "14d07bab58625756",
+        "type": "function",
+        "z": "b1db984d36d03a5a",
+        "name": "SoilMoisture",
+        "func": "const sensorType = msg.topic.split(\"/\").pop(); // Extract sensor type from the topic\n\n// Example equations (modify based on your understanding of the relationship):\nconst tempCoefficient = 0.1; // Adjust this coefficient based on your observations.\nconst humidityCoefficient = 0.2; // Adjust this coefficient based on your observations\nconst constantTerm = 10; // Adjust this constant term based on your observations\n\n// Declare humidity variable\nlet humidity = 0;\nlet temperature = 0; // Declare a temperature variable\n\n// Handle temperature and humidity separately based on the sensor type\nif (sensorType === \"temp\") {\n    const rawTemperature = msg.payload;\n    global.set(\"rawTemperature\", msg.payload);\n    temperature = parseFloat(rawTemperature);\n\n    // Debug messages\n    node.warn(\"Parsed Temperature: \" + temperature);\n\n    if (rawTemperature === null || isNaN(temperature)) {\n        // Check if temperature is null or not a valid number and log a warning\n        if (rawTemperature == null) {\n            node.warn(\"Temperature is null.\");\n        } else {\n            node.warn(\"Temperature is not a valid number.\");\n        }\n\n        // Handle the case when temperature is null or not a valid number\n        msg.payload = {\n            \"content\": \"Problem with temperature data. Cannot calculate estimated soil moisture.\"\n        };\n    } else {\n        // If temperature is valid, store it globally\n        global.set(\"temperature\", temperature);\n    }\n} else if (sensorType === \"humi\") {\n    const rawHumidity = msg.payload;\n    global.set(\"rawHumidity\", msg.payload);\n    humidity = parseFloat(rawHumidity); // Declare the humidity variable\n\n    // Debug messages\n    node.warn(\"Parsed Humidity: \" + humidity);\n\n    if (rawHumidity === null || isNaN(humidity)) {\n        // Check if humidity is null or not a valid number and log a warning\n        if (rawHumidity === null) {\n            node.warn(\"Humidity is null.\");\n        } else {\n            node.warn(\"Humidity is not a valid number.\");\n        }\n\n        // Handle the case when humidity is null or not a valid number\n        msg.payload = {\n            \"content\": \"Problem with humidity data. Cannot calculate estimated soil moisture.\"\n        };\n    } else {\n        // If humidity is valid, store it globally\n        global.set(\"humidity\", humidity);\n    }\n}\n\n// Now, calculate soil moisture only when both temperature and humidity values are available\nif (global.get(\"temperature\") !== undefined && global.get(\"humidity\") !== undefined) {\n    const temp = global.get(\"temperature\");\n    const hum = global.get(\"humidity\");\n\n    // Calculate estimated soil moisture using both temperature and humidity\n    var estimatedSoilMoisture = (tempCoefficient * temp) + (humidityCoefficient * hum) + constantTerm;\n\n    // Debug messages\n    node.warn(\"Estimated Soil Moisture: \" + estimatedSoilMoisture);\n\n    // Create a new message object with the estimated soil moisture, temperature, and humidity\n    msg.payload = {\n        temperature: temp,\n        humidity: hum,\n        estimatedSoilMoisture: estimatedSoilMoisture.toFixed(2) // Rounded to 2 decimal places\n    };\n    global.set(\"estimatedSoilMoisture\", estimatedSoilMoisture);\n}\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 340,
+        "wires": [
+            [
+                "6168425930de7780",
+                "3b31076cf8c97b75",
+                "3af6ea92b2b003f6",
+                "2623a9ac329825ba"
+            ]
+        ]
+    },
+    {
+        "id": "3b31076cf8c97b75",
+        "type": "ui_text",
+        "z": "b1db984d36d03a5a",
+        "group": "80228d1c6f13c156",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Humidity Display",
+        "label": "Currrent Humidity:",
+        "format": "{{msg.payload.hum}}%",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 710,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "3af6ea92b2b003f6",
+        "type": "ui_text",
+        "z": "b1db984d36d03a5a",
+        "group": "80228d1c6f13c156",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Temperature Display",
+        "label": "Current Temperature:",
+        "format": "{{msg.payload.temp}} °C",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 720,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "2623a9ac329825ba",
+        "type": "link out",
+        "z": "b1db984d36d03a5a",
+        "name": "SoilMoisture func",
+        "mode": "link",
+        "links": [
+            "2f3c5f84cb97de39"
+        ],
+        "x": 645,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "6168425930de7780",
+        "type": "ui_text",
+        "z": "b1db984d36d03a5a",
+        "group": "80228d1c6f13c156",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Soil Moisture Display",
+        "label": "Soil Moisture:",
+        "format": "{{msg.payload.estimatedSoilMoisture}}%",
+        "layout": "row-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 720,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "a6e203e6dddffd07",
+        "type": "switch",
+        "z": "b1db984d36d03a5a",
+        "name": "Check soil moisture",
+        "property": "payload.estimatedSoilMoisture",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "lte",
+                "v": "30",
+                "vt": "num"
+            },
+            {
+                "t": "gt",
+                "v": "30",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 390,
+        "y": 620,
+        "wires": [
+            [
+                "9c9631a0357582a6"
+            ],
+            [
+                "0b73b496163c06d6"
+            ]
+        ]
+    },
+    {
+        "id": "9c9631a0357582a6",
+        "type": "change",
+        "z": "b1db984d36d03a5a",
+        "name": "Pump ON",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "pump",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "ON",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 620,
+        "y": 600,
+        "wires": [
+            [
+                "aea0e270070fb962",
+                "8baa857c0bd34f92"
+            ]
+        ]
+    },
+    {
+        "id": "0b73b496163c06d6",
+        "type": "change",
+        "z": "b1db984d36d03a5a",
+        "name": "Pump OFF",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "OFF",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 610,
+        "y": 680,
+        "wires": [
+            [
+                "aea0e270070fb962"
+            ]
+        ]
+    },
+    {
+        "id": "aea0e270070fb962",
+        "type": "ui_text",
+        "z": "b1db984d36d03a5a",
+        "group": "75e37fa18cc07d80",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "name": "Pump Status Display",
+        "label": "Pump Status:",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 820,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "8baa857c0bd34f92",
+        "type": "trigger",
+        "z": "b1db984d36d03a5a",
+        "name": "Turn OFF after 2 minutes",
+        "op1": "ON",
+        "op2": "OFF",
+        "op1type": "str",
+        "op2type": "str",
+        "duration": "2",
+        "extend": false,
+        "overrideDelay": false,
+        "units": "min",
+        "reset": "",
+        "bytopic": "all",
+        "topic": "",
+        "outputs": 2,
+        "x": 830,
+        "y": 520,
+        "wires": [
+            [
+                "3e8b1af3ad89a362"
+            ],
+            [
+                "dd5e720698de20e5"
+            ]
+        ]
+    },
+    {
+        "id": "3e8b1af3ad89a362",
+        "type": "ui_text",
+        "z": "b1db984d36d03a5a",
+        "group": "75e37fa18cc07d80",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Pump Status UI",
+        "label": "Pump Status:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1100,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "dd5e720698de20e5",
+        "type": "ui_text",
+        "z": "b1db984d36d03a5a",
+        "group": "75e37fa18cc07d80",
+        "order": 1,
+        "width": "6",
+        "height": "1",
+        "name": "Pump Status UI",
+        "label": "Pump Status:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 1100,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "2f3c5f84cb97de39",
+        "type": "link in",
+        "z": "b1db984d36d03a5a",
+        "name": "link in 4",
+        "links": [
+            "2623a9ac329825ba"
+        ],
+        "x": 215,
+        "y": 620,
+        "wires": [
+            [
+                "a6e203e6dddffd07"
+            ]
+        ]
+    },
+    {
+        "id": "af9203538a129239",
+        "type": "telegram sender",
+        "z": "b1db984d36d03a5a",
+        "name": "",
+        "bot": "c5559b966808a5d9",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 750,
+        "y": 80,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "80228d1c6f13c156",
+        "type": "ui_group",
+        "name": "2.Dashboard",
+        "tab": "5ab87c3aa890cb45",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "75e37fa18cc07d80",
+        "type": "ui_group",
+        "name": "1. Dashgroup",
+        "tab": "5ab87c3aa890cb45",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "c5559b966808a5d9",
+        "type": "telegram bot",
+        "botname": "Sneha_proitd_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "addressfamily": "",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "5ab87c3aa890cb45",
+        "type": "ui_tab",
+        "name": "Tab",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

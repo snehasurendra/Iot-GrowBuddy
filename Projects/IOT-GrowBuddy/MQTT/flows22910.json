@@ -1,0 +1,275 @@
+[
+    {
+        "id": "a27897c9511b0118",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5d71d47833b7cd07",
+        "type": "ui_gauge",
+        "z": "a27897c9511b0118",
+        "name": "",
+        "group": "0ecbbda23e87e0bd",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 410,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "1b2f4dd6669d5833",
+        "type": "mqtt out",
+        "z": "a27897c9511b0118",
+        "name": "HTWIoTM2425/Sneha/test",
+        "topic": "HTWIoTM2425/Sneha/test",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "7605b759802aef82",
+        "x": 480,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "27c9e9961f632f15",
+        "type": "ui_slider",
+        "z": "a27897c9511b0118",
+        "name": "",
+        "label": "slider",
+        "tooltip": "",
+        "group": "0ecbbda23e87e0bd",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "5d71d47833b7cd07",
+                "1b2f4dd6669d5833",
+                "bda7d33c838940ff"
+            ]
+        ]
+    },
+    {
+        "id": "bda7d33c838940ff",
+        "type": "switch",
+        "z": "a27897c9511b0118",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "gt",
+                "v": "5",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 290,
+        "y": 340,
+        "wires": [
+            [
+                "f0f923f4bdcc7bbe"
+            ]
+        ]
+    },
+    {
+        "id": "f0f923f4bdcc7bbe",
+        "type": "change",
+        "z": "a27897c9511b0118",
+        "name": "",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.content",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.type",
+                "pt": "msg",
+                "to": "message",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.content",
+                "pt": "msg",
+                "to": "Value is greater than 5",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.chatId",
+                "pt": "msg",
+                "to": "1467891015",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 500,
+        "y": 380,
+        "wires": [
+            [
+                "37b1524fd90b12bb"
+            ]
+        ]
+    },
+    {
+        "id": "37b1524fd90b12bb",
+        "type": "telegram sender",
+        "z": "a27897c9511b0118",
+        "name": "Sender",
+        "bot": "5973b38a15c43f68",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 700,
+        "y": 380,
+        "wires": [
+            [
+                "ce51212b4415179a"
+            ]
+        ]
+    },
+    {
+        "id": "ce51212b4415179a",
+        "type": "debug",
+        "z": "a27897c9511b0118",
+        "name": "debug 13",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "e284afd1b19c6066",
+        "type": "link in",
+        "z": "a27897c9511b0118",
+        "name": "link in 1",
+        "links": [],
+        "x": 205,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0ecbbda23e87e0bd",
+        "type": "ui_group",
+        "name": "2.Dashboard group",
+        "tab": "5ab87c3aa890cb45",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "7605b759802aef82",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "5973b38a15c43f68",
+        "type": "telegram bot",
+        "botname": "Sneha_proitd_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "addressfamily": "",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    },
+    {
+        "id": "5ab87c3aa890cb45",
+        "type": "ui_tab",
+        "name": "Tab",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

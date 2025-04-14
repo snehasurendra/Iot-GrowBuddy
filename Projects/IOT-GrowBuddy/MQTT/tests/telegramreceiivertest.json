@@ -1,0 +1,234 @@
+[
+    {
+        "id": "4719515c2e618577",
+        "type": "tab",
+        "label": "telegram-recieve-test",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "c352fb0c6f815bd7",
+        "type": "telegram receiver",
+        "z": "4719515c2e618577",
+        "name": "Sneha-recieve",
+        "bot": "c5559b966808a5d9",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 210,
+        "y": 80,
+        "wires": [
+            [
+                "96347b0def267925"
+            ],
+            [
+                "35009d22556ddb93"
+            ]
+        ]
+    },
+    {
+        "id": "96347b0def267925",
+        "type": "debug",
+        "z": "4719515c2e618577",
+        "name": "debug 5",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "35009d22556ddb93",
+        "type": "debug",
+        "z": "4719515c2e618577",
+        "name": "debug 6",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "47d31966d1d98e48",
+        "type": "inject",
+        "z": "4719515c2e618577",
+        "name": "Hello",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 180,
+        "wires": [
+            [
+                "3a6b227e6e7cff21",
+                "854336a0011e1c51"
+            ]
+        ]
+    },
+    {
+        "id": "3a6b227e6e7cff21",
+        "type": "debug",
+        "z": "4719515c2e618577",
+        "name": "debug 8",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 300,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "854336a0011e1c51",
+        "type": "change",
+        "z": "4719515c2e618577",
+        "name": "",
+        "rules": [
+            {
+                "t": "move",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.content",
+                "tot": "msg"
+            },
+            {
+                "t": "set",
+                "p": "payload.chatId",
+                "pt": "msg",
+                "to": "1467891015",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.content",
+                "pt": "msg",
+                "to": "Hello Sneha",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload.type",
+                "pt": "msg",
+                "to": "message",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 380,
+        "y": 160,
+        "wires": [
+            [
+                "e424233556359452",
+                "f9b7dca76636cd6c"
+            ]
+        ]
+    },
+    {
+        "id": "e424233556359452",
+        "type": "debug",
+        "z": "4719515c2e618577",
+        "name": "debug 9",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "f9b7dca76636cd6c",
+        "type": "telegram sender",
+        "z": "4719515c2e618577",
+        "name": "",
+        "bot": "c5559b966808a5d9",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 610,
+        "y": 160,
+        "wires": [
+            [
+                "ff413e109dd2d2d0"
+            ]
+        ]
+    },
+    {
+        "id": "ff413e109dd2d2d0",
+        "type": "debug",
+        "z": "4719515c2e618577",
+        "name": "debug 10",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "c5559b966808a5d9",
+        "type": "telegram bot",
+        "botname": "Sneha_proitd_bot",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "addressfamily": "",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
+    }
+]

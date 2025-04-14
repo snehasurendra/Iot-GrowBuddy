@@ -1,0 +1,269 @@
+[
+    {
+        "id": "844b3defbf2a99d3",
+        "type": "tab",
+        "label": "TEMP HUMI DATA",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f953b016fa1f10f3",
+        "type": "mqtt in",
+        "z": "844b3defbf2a99d3",
+        "name": "",
+        "topic": "HTW_IoTM2425/Sneha/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "7802cdc7dce973d6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 240,
+        "wires": [
+            [
+                "f16efbbb8f4bfe49",
+                "0eedbda462c9b6db",
+                "73052f05c9666f1a",
+                "08cd6171b9c4bca1"
+            ]
+        ]
+    },
+    {
+        "id": "2905072c7bd9e0c2",
+        "type": "mqtt in",
+        "z": "844b3defbf2a99d3",
+        "name": "",
+        "topic": "HTW_IoTM2425/Sneha/humi",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "7802cdc7dce973d6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 280,
+        "y": 340,
+        "wires": [
+            [
+                "a6868babf5ef1075",
+                "1a610a0595e0c9dc",
+                "73052f05c9666f1a"
+            ]
+        ]
+    },
+    {
+        "id": "f16efbbb8f4bfe49",
+        "type": "ui_chart",
+        "z": "844b3defbf2a99d3",
+        "name": "",
+        "group": "75e37fa18cc07d80",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Temp Chart",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 690,
+        "y": 240,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a6868babf5ef1075",
+        "type": "ui_chart",
+        "z": "844b3defbf2a99d3",
+        "name": "",
+        "group": "75e37fa18cc07d80",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "Humidity Chart",
+        "chartType": "line",
+        "legend": "true",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 680,
+        "y": 340,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "0eedbda462c9b6db",
+        "type": "link out",
+        "z": "844b3defbf2a99d3",
+        "name": "TEMP",
+        "mode": "link",
+        "links": [
+            "8d9e8d4067054573",
+            "341b61d328690896",
+            "020fc140d7097b60",
+            "a5c5f4fe41b34cd6",
+            "ab90d8ae3618efaa",
+            "14e274d5e6a10966",
+            "cdda6cf22257dec1"
+        ],
+        "x": 505,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "1a610a0595e0c9dc",
+        "type": "link out",
+        "z": "844b3defbf2a99d3",
+        "name": "HUMI",
+        "mode": "link",
+        "links": [
+            "c1a61ce5e540e2f9",
+            "38942564bcbf3e53",
+            "799aaf5411485bb5"
+        ],
+        "x": 465,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "73052f05c9666f1a",
+        "type": "debug",
+        "z": "844b3defbf2a99d3",
+        "name": "debug 31",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 630,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "08cd6171b9c4bca1",
+        "type": "change",
+        "z": "844b3defbf2a99d3",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.content",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 480,
+        "y": 520,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7802cdc7dce973d6",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.f4.htw-berlin.de",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "10",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "75e37fa18cc07d80",
+        "type": "ui_group",
+        "name": "1. Dashgroup",
+        "tab": "5ab87c3aa890cb45",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "5ab87c3aa890cb45",
+        "type": "ui_tab",
+        "name": "Tab",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]

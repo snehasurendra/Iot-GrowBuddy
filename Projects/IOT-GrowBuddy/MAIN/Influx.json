@@ -1,0 +1,150 @@
+[
+    {
+        "id": "555316694ad6c22e",
+        "type": "tab",
+        "label": "Influx",
+        "disabled": true,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "680f8830ba9d894e",
+        "type": "mqtt in",
+        "z": "555316694ad6c22e",
+        "name": "",
+        "topic": "HTW_IoTM2425/Sneha/temp",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "7802cdc7dce973d6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 360,
+        "y": 180,
+        "wires": [
+            [
+                "20c972feda62a54b"
+            ]
+        ]
+    },
+    {
+        "id": "abd2c8388e5eac42",
+        "type": "mqtt in",
+        "z": "555316694ad6c22e",
+        "name": "",
+        "topic": "HTW_IoTM2425/Sneha/humi",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "7802cdc7dce973d6",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 360,
+        "y": 280,
+        "wires": [
+            [
+                "fdc27dbe3e3e6bc1"
+            ]
+        ]
+    },
+    {
+        "id": "20c972feda62a54b",
+        "type": "influxdb out",
+        "z": "555316694ad6c22e",
+        "influxdb": "f68094030acce045",
+        "name": "Temp_influx",
+        "measurement": "temperature",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "HTW Berlin",
+        "bucket": "first-bucket",
+        "x": 650,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "fdc27dbe3e3e6bc1",
+        "type": "influxdb out",
+        "z": "555316694ad6c22e",
+        "influxdb": "f68094030acce045",
+        "name": "Humid_influx",
+        "measurement": "humidity",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "HTW Berlin",
+        "bucket": "first-bucket",
+        "x": 650,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "32577a77787383ba",
+        "type": "influxdb in",
+        "z": "555316694ad6c22e",
+        "name": "",
+        "query": "",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "organisation",
+        "x": 400,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7802cdc7dce973d6",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.f4.htw-berlin.de",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "10",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f68094030acce045",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://141.45.154.198:8086/",
+        "timeout": "30",
+        "rejectUnauthorized": false
+    }
+]

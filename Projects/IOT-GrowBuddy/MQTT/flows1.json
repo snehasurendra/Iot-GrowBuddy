@@ -1,0 +1,354 @@
+[
+    {
+        "id": "cdaa91cb762a5992",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e2e441c23e96b965",
+        "type": "inject",
+        "z": "cdaa91cb762a5992",
+        "name": "Hello",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "Hello",
+        "payload": "iso",
+        "payloadType": "date",
+        "x": 190,
+        "y": 80,
+        "wires": [
+            [
+                "baddde0b0d8fa2c8"
+            ]
+        ]
+    },
+    {
+        "id": "baddde0b0d8fa2c8",
+        "type": "debug",
+        "z": "cdaa91cb762a5992",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "71ee031fd26b8a53",
+        "type": "inject",
+        "z": "cdaa91cb762a5992",
+        "name": "5",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "one",
+        "payload": "5",
+        "payloadType": "num",
+        "x": 110,
+        "y": 320,
+        "wires": [
+            [
+                "f5cc7a63690b2eac",
+                "c7b032286fa7c266",
+                "74b71f0ed0533671",
+                "bc9b072c4eee39ac"
+            ]
+        ]
+    },
+    {
+        "id": "08554bb97e886f0b",
+        "type": "inject",
+        "z": "cdaa91cb762a5992",
+        "name": "10",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "ten",
+        "payload": "10",
+        "payloadType": "num",
+        "x": 110,
+        "y": 380,
+        "wires": [
+            [
+                "f5cc7a63690b2eac",
+                "c7b032286fa7c266",
+                "74b71f0ed0533671",
+                "bc9b072c4eee39ac"
+            ]
+        ]
+    },
+    {
+        "id": "f5cc7a63690b2eac",
+        "type": "debug",
+        "z": "cdaa91cb762a5992",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 480,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "c7b032286fa7c266",
+        "type": "ui_gauge",
+        "z": "cdaa91cb762a5992",
+        "name": "",
+        "group": "989158894b87adeb",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "gtype": "gage",
+        "title": "gauge",
+        "label": "units",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 10,
+        "colors": [
+            "#00b500",
+            "#e6e600",
+            "#ca3838"
+        ],
+        "seg1": "",
+        "seg2": "",
+        "x": 490,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "74b71f0ed0533671",
+        "type": "mqtt out",
+        "z": "cdaa91cb762a5992",
+        "name": "",
+        "topic": "HTWIoTM2425/Alex/temp",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "7605b759802aef82",
+        "x": 550,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "1edab53748e57f6f",
+        "type": "mqtt in",
+        "z": "cdaa91cb762a5992",
+        "name": "",
+        "topic": "HTWIoTM2425/#",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "7605b759802aef82",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 520,
+        "wires": [
+            [
+                "4a00acf156051f50"
+            ]
+        ]
+    },
+    {
+        "id": "4a00acf156051f50",
+        "type": "debug",
+        "z": "cdaa91cb762a5992",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "4d6155569d7ba1fe",
+        "type": "ui_slider",
+        "z": "cdaa91cb762a5992",
+        "name": "",
+        "label": "slider",
+        "tooltip": "",
+        "group": "989158894b87adeb",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "passthru": true,
+        "outs": "all",
+        "topic": "topic",
+        "topicType": "msg",
+        "min": 0,
+        "max": 10,
+        "step": 1,
+        "x": 110,
+        "y": 620,
+        "wires": [
+            [
+                "bc9b072c4eee39ac",
+                "c7b032286fa7c266",
+                "bbbece7b192d721a"
+            ]
+        ]
+    },
+    {
+        "id": "bc9b072c4eee39ac",
+        "type": "ui_chart",
+        "z": "cdaa91cb762a5992",
+        "name": "",
+        "group": "989158894b87adeb",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "x": 490,
+        "y": 660,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "bbbece7b192d721a",
+        "type": "mqtt out",
+        "z": "cdaa91cb762a5992",
+        "name": "",
+        "topic": "HTWIoTM2425/Sneha/test",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "7605b759802aef82",
+        "x": 580,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "989158894b87adeb",
+        "type": "ui_group",
+        "name": "1. Dashgroup",
+        "tab": "5ab87c3aa890cb45",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "7605b759802aef82",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "broker.hivemq.com",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "5ab87c3aa890cb45",
+        "type": "ui_tab",
+        "name": "Tab",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    }
+]
