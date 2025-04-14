@@ -1,0 +1,7 @@
+-What is airtificial intellegence?
+-subsets of it
+-limitations of ML
+	-cant handle large dimensionality of data
+	-cant solve complex problems such as object rec and language processing
+-deep learning can focus on right features
+ -it chooses optimum featuresby them selves
